@@ -39,7 +39,7 @@ def cache_weather_data(data: dict) -> None:
     return None
     
 
-def get_soil_moisture(lat, lon, date, end_date):
+def get_soil_moisture(lat, lon, date=datetime.now().date()):
     url = (
         f"https://api.weatherbit.io/v2.0/history/agweather"
         f"?lat={lat}&lon={lon}&start_date={date}&end_date={date + timedelta(days=1)}&key={API_KEY}"
@@ -50,10 +50,12 @@ def get_soil_moisture(lat, lon, date, end_date):
     soil_moisture_0_10 = data["data"][0].get("v_soilm_0_10cm", 0) * 100
     soil_moisture_10_40 = data["data"][0].get("v_soilm_10_40cm", 0) * 100
 
-    return {
+    soil_data = {
         "soil_moisture_0_10_cm": soil_moisture_0_10,
         "soil_moisture_10_40_cm": soil_moisture_10_40
     }
+    
+    return soil_data
 
 '''
 def climate_current(lat, lon):
@@ -79,7 +81,7 @@ def cache_moisture_data(lat, lon, today=None, end=None):
     end = today + timedelta(days=14)
     
 
-    soil_data = get_soil_moisture(lat, lon, today, today)
+    soil_data = get_soil_moisture(lat, lon, today)
     # climate_data = climate_current(lat, lon)
 
     json_data = {
